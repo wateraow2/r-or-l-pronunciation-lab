@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R or L? Pronunciation Lab</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #dbe2ea;
+      --primary: #4057d6;
+      --primary-dark: #3044b5;
+      --success: #15803d;
+      --danger: #b42318;
+      --soft: #eef2ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 36px 20px 26px;
+      text-align: center;
+      background: linear-gradient(135deg, #eef2ff, #ffffff);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 5vw, 46px);
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    main {
+      width: min(960px, calc(100% - 32px));
+      margin: 28px auto 60px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .tab-button {
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 13px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tab-button.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .screen {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: clamp(22px, 4vw, 38px);
+      box-shadow: 0 12px 35px rgba(31, 41, 55, 0.08);
+    }
+
+    .screen.active { display: block; }
+
+    h2 { margin-top: 0; }
+
+    .instruction {
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .progress-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin: 16px 0 10px;
+      font-weight: 700;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .progress-fill {
+      width: 10%;
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .word-display {
+      padding: 22px;
+      text-align: center;
+      border-radius: 16px;
+      background: var(--soft);
+      font-size: clamp(32px, 8vw, 60px);
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin: 20px 0;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin: 18px 0;
+    }
+
+    button.action {
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--primary);
+      color: white;
+      min-width: 150px;
+    }
+
+    button.action:hover { background: var(--primary-dark); }
+
+    button.action:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    button.secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    button.secondary:hover { background: #f8fafc; }
+
+    button.choice {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      font-size: 22px;
+    }
+
+    .result-box {
+      margin-top: 22px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fafafa;
+      min-height: 72px;
+    }
+
+    .success {
+      color: var(--success);
+      font-weight: 800;
+    }
+
+    .error {
+      color: var(--danger);
+      font-weight: 800;
+    }
+
+    .muted { color: var(--muted); }
+
+    .tip {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-left: 5px solid var(--primary);
+      background: var(--soft);
+      border-radius: 8px;
+    }
+
+    .pair-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pair-card {
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      background: white;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 20px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 620px) {
+      .tabs { grid-template-columns: 1fr; }
+      button.action { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>R or L? Pronunciation Lab</h1>
+    <p>Listen, speak, check, and try again.</p>
+  </header>
+
+  <main>
+    <nav class="tabs" aria-label="학습 단계">
+      <button class="tab-button active" data-screen="listen">1. Listen and Choose</button>
+      <button class="tab-button" data-screen="record">2. Record and Check</button>
+      <button class="tab-button" data-screen="feedback">3. Feedback</button>
+    </nav>
+
+    <section id="listen" class="screen active">
+      <h2>Listen and Choose</h2>
+      <p class="instruction">
+        총 10문제입니다. 소리를 듣고 들린 단어를 선택하세요.
+        답을 고르면 다음 문제가 자동으로 나옵니다.
+      </p>
+
+      <div class="progress-wrap">
+        <span id="questionCounter">문제 1 / 10</span>
+        <span id="scoreCounter">정답 0개</span>
+      </div>
+
+      <div class="progress-bar" aria-label="문제 진행률">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+
+      <div class="word-display">R or L?</div>
+
+      <div class="button-row">
+        <button id="playQuiz" class="action">🔊 소리 듣기</button>
+      </div>
+
+      <div class="button-row">
+        <button id="choiceA" class="action choice"></button>
+        <button id="choiceB" class="action choice"></button>
+      </div>
+
+      <div id="listenResult" class="result-box">
+        <span class="muted">소리를 듣고 단어를 선택하세요.</span>
+      </div>
+
+      <div class="button-row">
+        <button id="restartQuiz" class="action secondary">10문제 다시 시작</button>
+      </div>
+    </section>
+
+    <section id="record" class="screen">
+      <h2>Record and Check</h2>
+      <p class="instruction">
+        듣기 활동이 끝났습니다. 제시된 단어를 영어로 말하세요.
+        Chrome 또는 Edge 사용을 권장합니다.
+      </p>
+
+      <div id="listeningSummary" class="result-box">
+        <span class="muted">듣기 활동 결과가 여기에 표시됩니다.</span>
+      </div>
+
+      <div id="targetWord" class="word-display">rice</div>
+
+      <div class="button-row">
+        <button id="hearTarget" class="action secondary">🔊 목표 발음 듣기</button>
+        <button id="startRecognition" class="action">🎤 말하기 시작</button>
+        <button id="newTarget" class="action secondary">다른 단어</button>
+      </div>
+
+      <div id="recognitionStatus" class="result-box">
+        <span class="muted">마이크 버튼을 누르면 브라우저가 권한을 요청합니다.</span>
+      </div>
+    </section>
+
+    <section id="feedback" class="screen">
+      <h2>Feedback</h2>
+      <p class="instruction">AI가 인식한 단어와 목표 단어를 비교한 결과입니다.</p>
+
+      <div id="feedbackBox" class="result-box">
+        <span class="muted">먼저 Record and Check 화면에서 단어를 발음하세요.</span>
+      </div>
+
+      <div class="tip">
+        <strong>/l/ 발음</strong><br />
+        혀끝을 윗니 뒤쪽 잇몸에 가볍게 닿게 합니다.<br /><br />
+        <strong>/r/ 발음</strong><br />
+        혀끝이 입천장에 닿지 않도록 하고, 혀를 뒤쪽으로 살짝 당깁니다.
+      </div>
+
+      <div class="pair-grid">
+        <div class="pair-card">rice / lice</div>
+        <div class="pair-card">right / light</div>
+        <div class="pair-card">road / load</div>
+        <div class="pair-card">rock / lock</div>
+        <div class="pair-card">grass / glass</div>
+        <div class="pair-card">fry / fly</div>
+      </div>
+
+      <div class="button-row">
+        <button id="retryButton" class="action">같은 단어 다시 연습하기</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    This tool gives simple speech-recognition feedback. It is not a professional phoneme analyzer.
+  </footer>
+
+  <script>
+    const pairs = [
+      ["rice", "lice"],
+      ["right", "light"],
+      ["road", "load"],
+      ["rock", "lock"],
+      ["grass", "glass"],
+      ["fry", "fly"]
+    ];
+
+    const TOTAL_QUESTIONS = 10;
+
+    let quizQuestions = [];
+    let currentQuestionIndex = 0;
+    let listeningScore = 0;
+    let answerLocked = false;
+
+    let currentTarget = "rice";
+    let lastTranscript = "";
+
+    const tabs = document.querySelectorAll(".tab-button");
+    const screens = document.querySelectorAll(".screen");
+
+    function showScreen(id) {
+      tabs.forEach(tab => {
+        tab.classList.toggle("active", tab.dataset.screen === id);
+      });
+
+      screens.forEach(screen => {
+        screen.classList.toggle("active", screen.id === id);
+      });
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => showScreen(tab.dataset.screen));
+    });
+
+    function speak(text, rate = 0.82) {
+      if (!("speechSynthesis" in window)) {
+        alert("이 브라우저에서는 음성 재생을 지원하지 않습니다.");
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = rate;
+
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoice = voices.find(
+        voice => voice.lang && voice.lang.toLowerCase().startsWith("en")
+      );
+
+      if (englishVoice) {
+        utterance.voice = englishVoice;
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function shuffle(array) {
+      const copy = [...array];
+
+      for (let i = copy.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]];
+      }
+
+      return copy;
+    }
+
+    function createQuizQuestions() {
+      const questionPool = [];
+
+      pairs.forEach(pair => {
+        questionPool.push({
+          pair: [...pair],
+          answer: pair[0]
+        });
+
+        questionPool.push({
+          pair: [...pair],
+          answer: pair[1]
+        });
+      });
+
+      return shuffle(questionPool).slice(0, TOTAL_QUESTIONS);
+    }
+
+    function updateQuizProgress() {
+      const displayedQuestion = Math.min(
+        currentQuestionIndex + 1,
+        TOTAL_QUESTIONS
+      );
+
+      document.getElementById("questionCounter").textContent =
+        `문제 ${displayedQuestion} / ${TOTAL_QUESTIONS}`;
+
+      document.getElementById("scoreCounter").textContent =
+        `정답 ${listeningScore}개`;
+
+      const progressPercent =
+        ((currentQuestionIndex + 1) / TOTAL_QUESTIONS) * 100;
+
+      document.getElementById("progressFill").style.width =
+        `${Math.min(progressPercent, 100)}%`;
+    }
+
+    function loadCurrentQuestion() {
+      answerLocked = false;
+
+      const question = quizQuestions[currentQuestionIndex];
+      const shuffledChoices = shuffle(question.pair);
+
+      document.getElementById("choiceA").textContent = shuffledChoices[0];
+      document.getElementById("choiceB").textContent = shuffledChoices[1];
+
+      document.getElementById("choiceA").disabled = false;
+      document.getElementById("choiceB").disabled = false;
+      document.getElementById("playQuiz").disabled = false;
+
+      document.getElementById("listenResult").innerHTML =
+        '<span class="muted">소리를 듣고 단어를 선택하세요.</span>';
+
+      updateQuizProgress();
+    }
+
+    function startQuiz() {
+      quizQuestions = createQuizQuestions();
+      currentQuestionIndex = 0;
+      listeningScore = 0;
+      answerLocked = false;
+
+      showScreen("listen");
+      loadCurrentQuestion();
+    }
+
+    function finishListeningQuiz() {
+      document.getElementById("questionCounter").textContent =
+        `문제 ${TOTAL_QUESTIONS} / ${TOTAL_QUESTIONS}`;
+
+      document.getElementById("scoreCounter").textContent =
+        `정답 ${listeningScore}개`;
+
+      document.getElementById("progressFill").style.width = "100%";
+
+      document.getElementById("listenResult").innerHTML =
+        `<div class="success">듣기 활동이 끝났습니다!</div>
+         <div>총 ${TOTAL_QUESTIONS}문제 중
+         <strong>${listeningScore}문제</strong>를 맞혔습니다.</div>
+         <div class="muted">잠시 후 2번 발음 녹음 활동으로 이동합니다.</div>`;
+
+      document.getElementById("choiceA").disabled = true;
+      document.getElementById("choiceB").disabled = true;
+      document.getElementById("playQuiz").disabled = true;
+
+      document.getElementById("listeningSummary").innerHTML =
+        `<div class="success">1단계 듣기 활동 완료</div>
+         <div>듣기 정답: <strong>${listeningScore} / ${TOTAL_QUESTIONS}</strong></div>`;
+
+      setTimeout(() => {
+        newTargetWord();
+        showScreen("record");
+      }, 1400);
+    }
+
+    function checkListening(choice) {
+      if (answerLocked) {
+        return;
+      }
+
+      answerLocked = true;
+
+      const question = quizQuestions[currentQuestionIndex];
+      const result = document.getElementById("listenResult");
+      const isCorrect = choice === question.answer;
+
+      document.getElementById("choiceA").disabled = true;
+      document.getElementById("choiceB").disabled = true;
+      document.getElementById("playQuiz").disabled = true;
+
+      if (isCorrect) {
+        listeningScore += 1;
+
+        result.innerHTML =
+          `<div class="success">정답입니다! ✓</div>
+           <div>들린 단어: <strong>${question.answer}</strong></div>`;
+      } else {
+        result.innerHTML =
+          `<div class="error">오답입니다.</div>
+           <div>정답은 <strong>${question.answer}</strong>입니다.</div>`;
+
+        speak(question.answer, 0.65);
+      }
+
+      document.getElementById("scoreCounter").textContent =
+        `정답 ${listeningScore}개`;
+
+      setTimeout(() => {
+        currentQuestionIndex += 1;
+
+        if (currentQuestionIndex >= TOTAL_QUESTIONS) {
+          finishListeningQuiz();
+        } else {
+          loadCurrentQuestion();
+          speak(quizQuestions[currentQuestionIndex].answer);
+        }
+      }, isCorrect ? 850 : 1250);
+    }
+
+    document.getElementById("playQuiz").addEventListener("click", () => {
+      const question = quizQuestions[currentQuestionIndex];
+      speak(question.answer);
+    });
+
+    document.getElementById("choiceA").addEventListener("click", event => {
+      checkListening(event.target.textContent);
+    });
+
+    document.getElementById("choiceB").addEventListener("click", event => {
+      checkListening(event.target.textContent);
+    });
+
+    document.getElementById("restartQuiz").addEventListener("click", startQuiz);
+
+    function newTargetWord() {
+      const flatWords = pairs.flat();
+      currentTarget =
+        flatWords[Math.floor(Math.random() * flatWords.length)];
+
+      document.getElementById("targetWord").textContent = currentTarget;
+
+      document.getElementById("recognitionStatus").innerHTML =
+        '<span class="muted">마이크 버튼을 누르고 제시된 단어를 말하세요.</span>';
+    }
+
+    document.getElementById("hearTarget").addEventListener("click", () => {
+      speak(currentTarget);
+    });
+
+    document.getElementById("newTarget").addEventListener("click", newTargetWord);
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    document.getElementById("startRecognition").addEventListener("click", () => {
+      const status = document.getElementById("recognitionStatus");
+
+      if (!SpeechRecognition) {
+        status.innerHTML =
+          '<div class="error">이 브라우저에서는 음성 인식을 지원하지 않습니다.</div>' +
+          '<div>Chrome 또는 Edge에서 다시 접속해 주세요.</div>';
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.continuous = false;
+      recognition.maxAlternatives = 3;
+
+      status.innerHTML =
+        '<div><strong>듣는 중...</strong> 제시된 단어를 한 번 또렷하게 말하세요.</div>';
+
+      recognition.onresult = event => {
+        const alternatives = Array.from(event.results[0]).map(result =>
+          result.transcript
+            .trim()
+            .toLowerCase()
+            .replace(/[.,!?]/g, "")
+        );
+
+        lastTranscript = alternatives[0] || "";
+        const matched = alternatives.includes(currentTarget.toLowerCase());
+
+        status.innerHTML =
+          `<div>AI 인식 결과: <strong>${lastTranscript || "인식 실패"}</strong></div>` +
+          `<div>목표 단어: <strong>${currentTarget}</strong></div>`;
+
+        renderFeedback(matched, alternatives);
+        showScreen("feedback");
+      };
+
+      recognition.onerror = event => {
+        let message =
+          "음성을 인식하지 못했습니다. 조용한 곳에서 다시 시도하세요.";
+
+        if (
+          event.error === "not-allowed" ||
+          event.error === "service-not-allowed"
+        ) {
+          message =
+            "마이크 권한이 차단되었습니다. 주소창의 마이크 아이콘에서 권한을 허용하세요.";
+        } else if (event.error === "no-speech") {
+          message =
+            "음성이 들리지 않았습니다. 마이크 가까이에서 다시 말하세요.";
+        } else if (event.error === "network") {
+          message =
+            "음성 인식 서비스 연결에 실패했습니다. 인터넷 연결을 확인하세요.";
+        }
+
+        status.innerHTML = `<div class="error">${message}</div>`;
+      };
+
+      try {
+        recognition.start();
+      } catch (error) {
+        status.innerHTML =
+          '<div class="error">음성 인식을 시작할 수 없습니다. 잠시 후 다시 눌러 주세요.</div>';
+      }
+    });
+
+    function startsWithR(word) {
+      return word.toLowerCase().startsWith("r");
+    }
+
+    function startsWithL(word) {
+      return word.toLowerCase().startsWith("l");
+    }
+
+    function renderFeedback(matched, alternatives) {
+      const feedback = document.getElementById("feedbackBox");
+      const recognized = alternatives[0] || "인식 실패";
+
+      if (matched) {
+        feedback.innerHTML =
+          `<div class="success">목표 단어가 인식되었습니다! ✓</div>
+           <p>목표 단어: <strong>${currentTarget}</strong><br>
+           AI 인식 결과: <strong>${recognized}</strong></p>
+           <p>같은 발음을 문장 속에서도 유지해 보세요.</p>`;
+        return;
+      }
+
+      let tip =
+        "천천히 다시 말하고 첫소리를 분명하게 발음해 보세요.";
+
+      if (startsWithR(currentTarget)) {
+        tip =
+          "/l/처럼 들렸을 수 있어요. /r/을 발음할 때 혀끝이 입천장에 닿지 않게 해 보세요.";
+      } else if (startsWithL(currentTarget)) {
+        tip =
+          "/r/처럼 들렸을 수 있어요. /l/을 발음할 때 혀끝을 윗니 뒤쪽 잇몸에 가볍게 닿게 해 보세요.";
+      } else if (currentTarget.includes("r")) {
+        tip =
+          "/r/ 소리를 낼 때 혀끝을 입천장에 닿지 않게 하고 혀를 뒤로 살짝 당겨 보세요.";
+      } else if (currentTarget.includes("l")) {
+        tip =
+          "/l/ 소리를 낼 때 혀끝을 윗니 뒤쪽 잇몸에 닿게 해 보세요.";
+      }
+
+      feedback.innerHTML =
+        `<div class="error">목표 단어와 다르게 인식되었습니다.</div>
+         <p>목표 단어: <strong>${currentTarget}</strong><br>
+         AI 인식 결과: <strong>${recognized}</strong></p>
+         <p>${tip}</p>
+         <p class="muted">
+           음성 인식 결과는 주변 소음과 기기 성능의 영향을 받을 수 있습니다.
+         </p>`;
+    }
+
+    document.getElementById("retryButton").addEventListener("click", () => {
+      showScreen("record");
+
+      document.getElementById("recognitionStatus").innerHTML =
+        '<span class="muted">같은 단어를 다시 발음해 보세요.</span>';
+    });
+
+    startQuiz();
+    newTargetWord();
+  </script>
+</body>
+</html>
