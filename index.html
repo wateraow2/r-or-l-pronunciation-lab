@@ -1,707 +1,110 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>R or L? Pronunciation Lab</title>
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --border: #dbe2ea;
-      --primary: #4057d6;
-      --primary-dark: #3044b5;
-      --success: #15803d;
-      --danger: #b42318;
-      --soft: #eef2ff;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, "Noto Sans KR", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    header {
-      padding: 36px 20px 26px;
-      text-align: center;
-      background: linear-gradient(135deg, #eef2ff, #ffffff);
-      border-bottom: 1px solid var(--border);
-    }
-
-    header h1 {
-      margin: 0 0 8px;
-      font-size: clamp(28px, 5vw, 46px);
-    }
-
-    header p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    main {
-      width: min(960px, calc(100% - 32px));
-      margin: 28px auto 60px;
-    }
-
-    .tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .tab-button {
-      border: 1px solid var(--border);
-      background: var(--card);
-      padding: 13px 10px;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .tab-button.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    .screen {
-      display: none;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: clamp(22px, 4vw, 38px);
-      box-shadow: 0 12px 35px rgba(31, 41, 55, 0.08);
-    }
-
-    .screen.active { display: block; }
-
-    h2 { margin-top: 0; }
-
-    .instruction {
-      color: var(--muted);
-      margin-bottom: 24px;
-    }
-
-    .progress-wrap {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin: 16px 0 10px;
-      font-weight: 700;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 12px;
-      background: #e5e7eb;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 20px;
-    }
-
-    .progress-fill {
-      width: 10%;
-      height: 100%;
-      background: var(--primary);
-      transition: width 0.3s ease;
-    }
-
-    .word-display {
-      padding: 22px;
-      text-align: center;
-      border-radius: 16px;
-      background: var(--soft);
-      font-size: clamp(32px, 8vw, 60px);
-      font-weight: 800;
-      letter-spacing: 1px;
-      margin: 20px 0;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      margin: 18px 0;
-    }
-
-    button.action {
-      border: none;
-      border-radius: 12px;
-      padding: 14px 20px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      background: var(--primary);
-      color: white;
-      min-width: 150px;
-    }
-
-    button.action:hover { background: var(--primary-dark); }
-
-    button.action:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    button.secondary {
-      background: white;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    button.secondary:hover { background: #f8fafc; }
-
-    button.choice {
-      background: white;
-      color: var(--primary);
-      border: 2px solid var(--primary);
-      font-size: 22px;
-    }
-
-    .result-box {
-      margin-top: 22px;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: #fafafa;
-      min-height: 72px;
-    }
-
-    .success {
-      color: var(--success);
-      font-weight: 800;
-    }
-
-    .error {
-      color: var(--danger);
-      font-weight: 800;
-    }
-
-    .muted { color: var(--muted); }
-
-    .tip {
-      margin-top: 18px;
-      padding: 16px 18px;
-      border-left: 5px solid var(--primary);
-      background: var(--soft);
-      border-radius: 8px;
-    }
-
-    .pair-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .pair-card {
-      border: 1px solid var(--border);
-      padding: 12px;
-      border-radius: 12px;
-      text-align: center;
-      background: white;
-    }
-
-    footer {
-      text-align: center;
-      color: var(--muted);
-      padding: 20px;
-      font-size: 14px;
-    }
-
-    @media (max-width: 620px) {
-      .tabs { grid-template-columns: 1fr; }
-      button.action { width: 100%; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R/L Rush Arena</title>
+<style>
+:root{--bg:#111633;--bg2:#252d69;--card:#fff;--text:#182033;--muted:#697386;--p:#6c5ce7;--b:#2687f5;--g:#16a36a;--r:#e5484d;--y:#ffcc4d;--line:#e1e6f0}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,"Noto Sans KR",sans-serif;color:#fff;background:radial-gradient(circle at 15% 10%,#6c5ce755,transparent 28%),linear-gradient(145deg,var(--bg),var(--bg2))}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}.wrap{width:min(1080px,calc(100% - 24px));margin:auto;padding:22px 0 50px}.brand{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.brand h1{font-size:clamp(24px,4vw,36px);margin:0}.tag{padding:8px 12px;border-radius:999px;background:#ffffff1c;border:1px solid #ffffff30;font-weight:800;font-size:13px}.panel{background:#fff;color:var(--text);border-radius:28px;overflow:hidden;box-shadow:0 25px 70px #05081e66}.start{display:grid;grid-template-columns:1.08fr .92fr;min-height:620px}.hero{padding:52px;background:linear-gradient(145deg,#6c5ce7,#2687f5);color:#fff}.hero h2{font-size:clamp(48px,8vw,80px);line-height:.95;letter-spacing:-4px;margin:24px 0 18px}.hero p{font-size:18px;line-height:1.7}.features{display:grid;gap:12px;margin-top:30px}.feature{padding:14px;border-radius:17px;background:#ffffff1b;border:1px solid #ffffff22}.feature b{display:block;margin-bottom:4px}.feature span{font-size:13px;opacity:.88}.setup{padding:45px;display:flex;flex-direction:column;justify-content:center}.setup h3{font-size:30px;margin:0 0 5px}.sub{color:var(--muted);margin:0 0 22px}.field{margin-bottom:15px}.field label{display:block;font-weight:900;font-size:13px;margin-bottom:7px}.field input,.field select,textarea{width:100%;padding:14px;border:1px solid var(--line);border-radius:14px;outline:0}.field input:focus,.field select:focus,textarea:focus{border-color:#8f7cff;box-shadow:0 0 0 4px #6c5ce71c}.room{display:grid;grid-template-columns:1fr auto;gap:8px}.mini,.secondary{padding:12px 15px;border-radius:13px;background:#eef1f7;color:#344054;font-weight:900}.primary{padding:15px 18px;border-radius:15px;background:linear-gradient(135deg,var(--p),var(--b));color:#fff;font-weight:950;box-shadow:0 12px 24px #5960df40}.note{background:#fff7d8;color:#654d00;padding:14px;border-radius:14px;font-size:13px;line-height:1.55;margin:2px 0 18px}.linkbtn{margin-top:12px;background:none;color:var(--p);font-weight:900;text-decoration:underline}.game{padding:18px}.hud{display:grid;grid-template-columns:1fr repeat(3,auto);gap:10px;margin-bottom:12px}.box{background:#f6f7fc;border:1px solid #e4e8f1;padding:11px 14px;border-radius:17px;min-width:105px}.box small{display:block;color:var(--muted);font-size:11px;font-weight:900;text-transform:uppercase}.box b{font-size:19px}.progress{height:13px;background:#e7eaf2;border-radius:999px;overflow:hidden;margin-bottom:16px}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--p),var(--b),#22c7a9);transition:.3s}.arena{display:grid;grid-template-columns:1fr 230px;gap:15px}.qcard{min-height:560px;border:1px solid #e2e6ef;border-radius:23px;padding:36px;background:radial-gradient(circle at 92% 5%,#8f7cff22,transparent 25%),#fff}.top{display:flex;justify-content:space-between;gap:10px;align-items:center}.badge{padding:9px 13px;border-radius:999px;background:#eef0ff;color:var(--p);font-weight:950;font-size:13px}.timer{padding:9px 13px;border-radius:999px;background:#172038;color:#fff;font-weight:950}.qcard h2{text-align:center;font-size:clamp(28px,5vw,44px);margin:24px 0 8px;letter-spacing:-1px}.help{text-align:center;color:var(--muted);margin:0 auto 20px}.orb{display:grid;place-items:center;width:125px;height:125px;margin:22px auto;border-radius:40px;background:linear-gradient(145deg,var(--p),var(--b));color:#fff;font-size:48px;box-shadow:0 18px 35px #5960df44}.choices{display:grid;grid-template-columns:1fr 1fr;gap:13px;max-width:700px;margin:24px auto}.choice{min-height:90px;border-radius:16px;border:2px solid #e2e6ef;background:#f8f9fd;color:#202940;font-weight:950;font-size:28px}.choice.correct{background:#e9f8f1;border-color:var(--g);color:#087647}.choice.wrong{background:#fff0f0;border-color:var(--r);color:#a72a31}.target{text-align:center;font-size:clamp(52px,10vw,86px);font-weight:1000;letter-spacing:-3px;margin-top:30px}.ipa{text-align:center;color:var(--muted);font-weight:800}.micbox{max-width:640px;margin:25px auto 0;padding:18px;border-radius:20px;background:#f6f7fc;border:1px solid #e2e6ef;text-align:center}.lane{display:inline-block;padding:8px 12px;border-radius:999px;background:#fff0d7;color:#8b5100;font-weight:950;font-size:13px}.mic{display:block;width:min(100%,350px);margin:15px auto 10px;padding:15px;border-radius:15px;background:linear-gradient(145deg,#ff6d5d,#ff9f43);color:#fff;font-weight:950;font-size:18px}.mic.listening{animation:pulse 1s infinite}@keyframes pulse{50%{transform:scale(1.04);box-shadow:0 0 0 14px #ff6d5d00}}.feedback{min-height:62px;padding:12px;border-radius:14px;background:#fff;border:1px solid #e3e7ef;display:grid;place-items:center}.feedback.good{background:#eaf8f1;color:#087647;border-color:#bee6d2}.feedback.bad{background:#fff0f0;color:#a72a31;border-color:#f2c3c5}.side{display:flex;flex-direction:column;gap:12px}.sidecard{padding:16px;border:1px solid #e2e6ef;border-radius:19px;background:#f8f9fd}.sidecard h3{font-size:15px;margin:0 0 10px}.track{height:220px;position:relative;border-radius:15px;background:repeating-linear-gradient(to bottom,#eef1f8 0,#eef1f8 36px,#e0e5ef 36px,#e0e5ef 38px)}.finish{position:absolute;top:10px;left:0;right:0;text-align:center;font-size:12px;font-weight:950;color:#667085}.runner{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:40px;transition:.4s}.boost{height:10px;border-radius:999px;background:#e5e8f1;overflow:hidden}.boost div{height:100%;width:0;background:linear-gradient(90deg,var(--y),#ff8a34);transition:.25s}.tips{padding-left:18px;color:#475467;font-size:13px;line-height:1.65}.result,.teacher{padding:45px;text-align:center}.trophy{width:95px;height:95px;border-radius:30px;display:grid;place-items:center;margin:auto;background:linear-gradient(145deg,#ffe676,#ff9a3c);font-size:53px}.result h2{font-size:48px;margin:20px 0 5px}.ranktitle{color:var(--p);font-size:21px;font-weight:950}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:760px;margin:28px auto}.stat{padding:19px;border-radius:17px;background:#f6f7fc;border:1px solid #e1e5ef}.stat small{display:block;color:var(--muted);font-weight:900}.stat b{font-size:28px}.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:720px;margin:auto}.code{max-width:760px;margin:22px auto 0;padding:13px;border-radius:13px;background:#161e36;color:#dfe7ff;font:12px monospace;word-break:break-all}.teacher{text-align:left}.teacherhead{display:flex;justify-content:space-between;gap:10px}.teacher textarea{min-height:170px;resize:vertical;font:13px monospace}.board{width:100%;border-collapse:collapse;margin-top:20px}.board th,.board td{padding:12px;border-bottom:1px solid #e6eaf1}.board th{background:#eef1f6;color:#475467;font-size:12px}.board tr:first-child td{background:#fff8d8;font-weight:900}.confetti{position:fixed;top:-20px;width:10px;height:15px;z-index:99;animation:fall linear forwards}@keyframes fall{to{transform:translate3d(var(--x),110vh,0) rotate(850deg)}}
+@media(max-width:850px){.start{grid-template-columns:1fr}.arena{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.track{height:150px}.stats{grid-template-columns:1fr 1fr}}@media(max-width:600px){.wrap{width:calc(100% - 14px)}.tag{display:none}.setup,.hero,.result,.teacher{padding:27px 20px}.hud{grid-template-columns:1fr 1fr}.hud .box:first-child{grid-column:1/-1}.qcard{padding:22px 14px}.choices,.actions,.side{grid-template-columns:1fr}.choice{min-height:75px}.result h2{font-size:36px}}
+</style>
 </head>
 <body>
-  <header>
-    <h1>R or L? Pronunciation Lab</h1>
-    <p>Listen, speak, check, and try again.</p>
-  </header>
+<div class="wrap">
+<div class="brand"><h1>🎤 R/L Rush Arena</h1><div class="tag">⚡ Classroom Multiplayer Edition</div></div>
 
-  <main>
-    <nav class="tabs" aria-label="학습 단계">
-      <button class="tab-button active" data-screen="listen">1. Listen and Choose</button>
-      <button class="tab-button" data-screen="record">2. Record and Check</button>
-      <button class="tab-button" data-screen="feedback">3. Feedback</button>
-    </nav>
+<section id="start" class="panel start">
+  <div class="hero">
+    <b>🎮 Pronunciation Game Lab</b>
+    <h2>Hear it.<br>Say it.<br>Win it.</h2>
+    <p>/r/과 /l/을 듣고 말하며 점수와 코인을 모으는 교실형 발음 게임입니다. 같은 방 코드를 입력하면 모두 같은 문제 순서로 플레이합니다.</p>
+    <div class="features">
+      <div class="feature"><b>🎧 동시 플레이</b><span>학생마다 자기 기기와 이어폰을 사용합니다.</span></div>
+      <div class="feature"><b>🛡️ 소음 보호 판정</b><span>무음·네트워크 오류는 오답 처리하지 않습니다.</span></div>
+      <div class="feature"><b>🏁 점수·코인·연속 정답</b><span>3연속 정답이면 다음 점수에 2배 부스트가 적용됩니다.</span></div>
+    </div>
+  </div>
+  <div class="setup">
+    <h3>게임 참가</h3><p class="sub">닉네임과 방 코드를 입력하세요.</p>
+    <div class="field"><label>닉네임</label><input id="name" maxlength="16" placeholder="예: Sua"></div>
+    <div class="field"><label>방 코드</label><div class="room"><input id="room" value="RL2026" maxlength="10"><button id="random" class="mini">랜덤</button></div></div>
+    <div class="field"><label>문제 수</label><select id="count"><option value="10">10문제</option><option value="12" selected>12문제</option><option value="15">15문제</option></select></div>
+    <div class="note"><b>교실 모드</b><br>학생마다 자기 기기를 사용하고 듣기 문제에서는 이어폰을 착용하세요. 발음할 때 기기를 입에서 약 10cm 떨어뜨리면 주변 학생이 함께 말해도 오류가 줄어듭니다.</div>
+    <button id="go" class="primary">🚀 게임 시작</button>
+    <button id="teacherOpen" class="linkbtn">교사용 순위판 열기</button>
+  </div>
+</section>
 
-    <section id="listen" class="screen active">
-      <h2>Listen and Choose</h2>
-      <p class="instruction">
-        총 10문제입니다. 소리를 듣고 들린 단어를 선택하세요.
-        답을 고르면 다음 문제가 자동으로 나옵니다.
-      </p>
-
-      <div class="progress-wrap">
-        <span id="questionCounter">문제 1 / 10</span>
-        <span id="scoreCounter">정답 0개</span>
+<section id="game" class="panel game hidden">
+  <div class="hud">
+    <div class="box"><small>Player · Room</small><b id="player">-</b></div>
+    <div class="box"><small>Score</small><b id="score">0</b></div>
+    <div class="box"><small>Coins</small><b id="coins">🪙 0</b></div>
+    <div class="box"><small>Streak</small><b id="streak">🔥 0</b></div>
+  </div>
+  <div class="progress"><div id="progress" class="fill"></div></div>
+  <div class="arena">
+    <main class="qcard">
+      <div class="top"><div id="badge" class="badge">ROUND</div><div id="timer" class="timer">20</div></div>
+      <h2 id="title">문제</h2><p id="help" class="help"></p>
+      <div id="listenArea"><button id="orb" class="orb">🔊</button><div id="choices" class="choices"></div></div>
+      <div id="speakArea" class="hidden">
+        <div id="target" class="target">rice</div><div id="ipa" class="ipa">/raɪs/</div>
+        <div class="micbox"><div id="lane" class="lane">🎙️ 마이크 라인 1</div><button id="mic" class="mic">🎤 발음 도전</button><div id="feedback" class="feedback">SPEAK NOW가 나타나면 말하세요.</div><button id="hear" class="linkbtn">목표 발음 듣기</button></div>
       </div>
-
-      <div class="progress-bar" aria-label="문제 진행률">
-        <div id="progressFill" class="progress-fill"></div>
-      </div>
-
-      <div class="word-display">R or L?</div>
-
-      <div class="button-row">
-        <button id="playQuiz" class="action">🔊 소리 듣기</button>
-      </div>
-
-      <div class="button-row">
-        <button id="choiceA" class="action choice"></button>
-        <button id="choiceB" class="action choice"></button>
-      </div>
-
-      <div id="listenResult" class="result-box">
-        <span class="muted">소리를 듣고 단어를 선택하세요.</span>
-      </div>
-
-      <div class="button-row">
-        <button id="restartQuiz" class="action secondary">10문제 다시 시작</button>
-      </div>
-    </section>
-
-    <section id="record" class="screen">
-      <h2>Record and Check</h2>
-      <p class="instruction">
-        듣기 활동이 끝났습니다. 제시된 단어를 영어로 말하세요.
-        Chrome 또는 Edge 사용을 권장합니다.
-      </p>
-
-      <div id="listeningSummary" class="result-box">
-        <span class="muted">듣기 활동 결과가 여기에 표시됩니다.</span>
-      </div>
-
-      <div id="targetWord" class="word-display">rice</div>
-
-      <div class="button-row">
-        <button id="hearTarget" class="action secondary">🔊 목표 발음 듣기</button>
-        <button id="startRecognition" class="action">🎤 말하기 시작</button>
-        <button id="newTarget" class="action secondary">다른 단어</button>
-      </div>
-
-      <div id="recognitionStatus" class="result-box">
-        <span class="muted">마이크 버튼을 누르면 브라우저가 권한을 요청합니다.</span>
-      </div>
-    </section>
-
-    <section id="feedback" class="screen">
-      <h2>Feedback</h2>
-      <p class="instruction">AI가 인식한 단어와 목표 단어를 비교한 결과입니다.</p>
-
-      <div id="feedbackBox" class="result-box">
-        <span class="muted">먼저 Record and Check 화면에서 단어를 발음하세요.</span>
-      </div>
-
-      <div class="tip">
-        <strong>/l/ 발음</strong><br />
-        혀끝을 윗니 뒤쪽 잇몸에 가볍게 닿게 합니다.<br /><br />
-        <strong>/r/ 발음</strong><br />
-        혀끝이 입천장에 닿지 않도록 하고, 혀를 뒤쪽으로 살짝 당깁니다.
-      </div>
-
-      <div class="pair-grid">
-        <div class="pair-card">rice / lice</div>
-        <div class="pair-card">right / light</div>
-        <div class="pair-card">road / load</div>
-        <div class="pair-card">rock / lock</div>
-        <div class="pair-card">grass / glass</div>
-        <div class="pair-card">fry / fly</div>
-      </div>
-
-      <div class="button-row">
-        <button id="retryButton" class="action">같은 단어 다시 연습하기</button>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    This tool gives simple speech-recognition feedback. It is not a professional phoneme analyzer.
-  </footer>
-
-  <script>
-    const pairs = [
-      ["rice", "lice"],
-      ["right", "light"],
-      ["road", "load"],
-      ["rock", "lock"],
-      ["grass", "glass"],
-      ["fry", "fly"]
-    ];
-
-    const TOTAL_QUESTIONS = 10;
-
-    let quizQuestions = [];
-    let currentQuestionIndex = 0;
-    let listeningScore = 0;
-    let answerLocked = false;
-
-    let currentTarget = "rice";
-    let lastTranscript = "";
-
-    const tabs = document.querySelectorAll(".tab-button");
-    const screens = document.querySelectorAll(".screen");
-
-    function showScreen(id) {
-      tabs.forEach(tab => {
-        tab.classList.toggle("active", tab.dataset.screen === id);
-      });
-
-      screens.forEach(screen => {
-        screen.classList.toggle("active", screen.id === id);
-      });
-    }
-
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => showScreen(tab.dataset.screen));
-    });
-
-    function speak(text, rate = 0.82) {
-      if (!("speechSynthesis" in window)) {
-        alert("이 브라우저에서는 음성 재생을 지원하지 않습니다.");
-        return;
-      }
-
-      window.speechSynthesis.cancel();
-
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-US";
-      utterance.rate = rate;
-
-      const voices = window.speechSynthesis.getVoices();
-      const englishVoice = voices.find(
-        voice => voice.lang && voice.lang.toLowerCase().startsWith("en")
-      );
-
-      if (englishVoice) {
-        utterance.voice = englishVoice;
-      }
-
-      window.speechSynthesis.speak(utterance);
-    }
-
-    function shuffle(array) {
-      const copy = [...array];
-
-      for (let i = copy.length - 1; i > 0; i--) {
-        const randomIndex = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]];
-      }
-
-      return copy;
-    }
-
-    function createQuizQuestions() {
-      const questionPool = [];
-
-      pairs.forEach(pair => {
-        questionPool.push({
-          pair: [...pair],
-          answer: pair[0]
-        });
-
-        questionPool.push({
-          pair: [...pair],
-          answer: pair[1]
-        });
-      });
-
-      return shuffle(questionPool).slice(0, TOTAL_QUESTIONS);
-    }
-
-    function updateQuizProgress() {
-      const displayedQuestion = Math.min(
-        currentQuestionIndex + 1,
-        TOTAL_QUESTIONS
-      );
-
-      document.getElementById("questionCounter").textContent =
-        `문제 ${displayedQuestion} / ${TOTAL_QUESTIONS}`;
-
-      document.getElementById("scoreCounter").textContent =
-        `정답 ${listeningScore}개`;
-
-      const progressPercent =
-        ((currentQuestionIndex + 1) / TOTAL_QUESTIONS) * 100;
-
-      document.getElementById("progressFill").style.width =
-        `${Math.min(progressPercent, 100)}%`;
-    }
-
-    function loadCurrentQuestion() {
-      answerLocked = false;
-
-      const question = quizQuestions[currentQuestionIndex];
-      const shuffledChoices = shuffle(question.pair);
-
-      document.getElementById("choiceA").textContent = shuffledChoices[0];
-      document.getElementById("choiceB").textContent = shuffledChoices[1];
-
-      document.getElementById("choiceA").disabled = false;
-      document.getElementById("choiceB").disabled = false;
-      document.getElementById("playQuiz").disabled = false;
-
-      document.getElementById("listenResult").innerHTML =
-        '<span class="muted">소리를 듣고 단어를 선택하세요.</span>';
-
-      updateQuizProgress();
-    }
-
-    function startQuiz() {
-      quizQuestions = createQuizQuestions();
-      currentQuestionIndex = 0;
-      listeningScore = 0;
-      answerLocked = false;
-
-      showScreen("listen");
-      loadCurrentQuestion();
-    }
-
-    function finishListeningQuiz() {
-      document.getElementById("questionCounter").textContent =
-        `문제 ${TOTAL_QUESTIONS} / ${TOTAL_QUESTIONS}`;
-
-      document.getElementById("scoreCounter").textContent =
-        `정답 ${listeningScore}개`;
-
-      document.getElementById("progressFill").style.width = "100%";
-
-      document.getElementById("listenResult").innerHTML =
-        `<div class="success">듣기 활동이 끝났습니다!</div>
-         <div>총 ${TOTAL_QUESTIONS}문제 중
-         <strong>${listeningScore}문제</strong>를 맞혔습니다.</div>
-         <div class="muted">잠시 후 2번 발음 녹음 활동으로 이동합니다.</div>`;
-
-      document.getElementById("choiceA").disabled = true;
-      document.getElementById("choiceB").disabled = true;
-      document.getElementById("playQuiz").disabled = true;
-
-      document.getElementById("listeningSummary").innerHTML =
-        `<div class="success">1단계 듣기 활동 완료</div>
-         <div>듣기 정답: <strong>${listeningScore} / ${TOTAL_QUESTIONS}</strong></div>`;
-
-      setTimeout(() => {
-        newTargetWord();
-        showScreen("record");
-      }, 1400);
-    }
-
-    function checkListening(choice) {
-      if (answerLocked) {
-        return;
-      }
-
-      answerLocked = true;
-
-      const question = quizQuestions[currentQuestionIndex];
-      const result = document.getElementById("listenResult");
-      const isCorrect = choice === question.answer;
-
-      document.getElementById("choiceA").disabled = true;
-      document.getElementById("choiceB").disabled = true;
-      document.getElementById("playQuiz").disabled = true;
-
-      if (isCorrect) {
-        listeningScore += 1;
-
-        result.innerHTML =
-          `<div class="success">정답입니다! ✓</div>
-           <div>들린 단어: <strong>${question.answer}</strong></div>`;
-      } else {
-        result.innerHTML =
-          `<div class="error">오답입니다.</div>
-           <div>정답은 <strong>${question.answer}</strong>입니다.</div>`;
-
-        speak(question.answer, 0.65);
-      }
-
-      document.getElementById("scoreCounter").textContent =
-        `정답 ${listeningScore}개`;
-
-      setTimeout(() => {
-        currentQuestionIndex += 1;
-
-        if (currentQuestionIndex >= TOTAL_QUESTIONS) {
-          finishListeningQuiz();
-        } else {
-          loadCurrentQuestion();
-          speak(quizQuestions[currentQuestionIndex].answer);
-        }
-      }, isCorrect ? 850 : 1250);
-    }
-
-    document.getElementById("playQuiz").addEventListener("click", () => {
-      const question = quizQuestions[currentQuestionIndex];
-      speak(question.answer);
-    });
-
-    document.getElementById("choiceA").addEventListener("click", event => {
-      checkListening(event.target.textContent);
-    });
-
-    document.getElementById("choiceB").addEventListener("click", event => {
-      checkListening(event.target.textContent);
-    });
-
-    document.getElementById("restartQuiz").addEventListener("click", startQuiz);
-
-    function newTargetWord() {
-      const flatWords = pairs.flat();
-      currentTarget =
-        flatWords[Math.floor(Math.random() * flatWords.length)];
-
-      document.getElementById("targetWord").textContent = currentTarget;
-
-      document.getElementById("recognitionStatus").innerHTML =
-        '<span class="muted">마이크 버튼을 누르고 제시된 단어를 말하세요.</span>';
-    }
-
-    document.getElementById("hearTarget").addEventListener("click", () => {
-      speak(currentTarget);
-    });
-
-    document.getElementById("newTarget").addEventListener("click", newTargetWord);
-
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    document.getElementById("startRecognition").addEventListener("click", () => {
-      const status = document.getElementById("recognitionStatus");
-
-      if (!SpeechRecognition) {
-        status.innerHTML =
-          '<div class="error">이 브라우저에서는 음성 인식을 지원하지 않습니다.</div>' +
-          '<div>Chrome 또는 Edge에서 다시 접속해 주세요.</div>';
-        return;
-      }
-
-      const recognition = new SpeechRecognition();
-      recognition.lang = "en-US";
-      recognition.interimResults = false;
-      recognition.continuous = false;
-      recognition.maxAlternatives = 3;
-
-      status.innerHTML =
-        '<div><strong>듣는 중...</strong> 제시된 단어를 한 번 또렷하게 말하세요.</div>';
-
-      recognition.onresult = event => {
-        const alternatives = Array.from(event.results[0]).map(result =>
-          result.transcript
-            .trim()
-            .toLowerCase()
-            .replace(/[.,!?]/g, "")
-        );
-
-        lastTranscript = alternatives[0] || "";
-        const matched = alternatives.includes(currentTarget.toLowerCase());
-
-        status.innerHTML =
-          `<div>AI 인식 결과: <strong>${lastTranscript || "인식 실패"}</strong></div>` +
-          `<div>목표 단어: <strong>${currentTarget}</strong></div>`;
-
-        renderFeedback(matched, alternatives);
-        showScreen("feedback");
-      };
-
-      recognition.onerror = event => {
-        let message =
-          "음성을 인식하지 못했습니다. 조용한 곳에서 다시 시도하세요.";
-
-        if (
-          event.error === "not-allowed" ||
-          event.error === "service-not-allowed"
-        ) {
-          message =
-            "마이크 권한이 차단되었습니다. 주소창의 마이크 아이콘에서 권한을 허용하세요.";
-        } else if (event.error === "no-speech") {
-          message =
-            "음성이 들리지 않았습니다. 마이크 가까이에서 다시 말하세요.";
-        } else if (event.error === "network") {
-          message =
-            "음성 인식 서비스 연결에 실패했습니다. 인터넷 연결을 확인하세요.";
-        }
-
-        status.innerHTML = `<div class="error">${message}</div>`;
-      };
-
-      try {
-        recognition.start();
-      } catch (error) {
-        status.innerHTML =
-          '<div class="error">음성 인식을 시작할 수 없습니다. 잠시 후 다시 눌러 주세요.</div>';
-      }
-    });
-
-    function startsWithR(word) {
-      return word.toLowerCase().startsWith("r");
-    }
-
-    function startsWithL(word) {
-      return word.toLowerCase().startsWith("l");
-    }
-
-    function renderFeedback(matched, alternatives) {
-      const feedback = document.getElementById("feedbackBox");
-      const recognized = alternatives[0] || "인식 실패";
-
-      if (matched) {
-        feedback.innerHTML =
-          `<div class="success">목표 단어가 인식되었습니다! ✓</div>
-           <p>목표 단어: <strong>${currentTarget}</strong><br>
-           AI 인식 결과: <strong>${recognized}</strong></p>
-           <p>같은 발음을 문장 속에서도 유지해 보세요.</p>`;
-        return;
-      }
-
-      let tip =
-        "천천히 다시 말하고 첫소리를 분명하게 발음해 보세요.";
-
-      if (startsWithR(currentTarget)) {
-        tip =
-          "/l/처럼 들렸을 수 있어요. /r/을 발음할 때 혀끝이 입천장에 닿지 않게 해 보세요.";
-      } else if (startsWithL(currentTarget)) {
-        tip =
-          "/r/처럼 들렸을 수 있어요. /l/을 발음할 때 혀끝을 윗니 뒤쪽 잇몸에 가볍게 닿게 해 보세요.";
-      } else if (currentTarget.includes("r")) {
-        tip =
-          "/r/ 소리를 낼 때 혀끝을 입천장에 닿지 않게 하고 혀를 뒤로 살짝 당겨 보세요.";
-      } else if (currentTarget.includes("l")) {
-        tip =
-          "/l/ 소리를 낼 때 혀끝을 윗니 뒤쪽 잇몸에 닿게 해 보세요.";
-      }
-
-      feedback.innerHTML =
-        `<div class="error">목표 단어와 다르게 인식되었습니다.</div>
-         <p>목표 단어: <strong>${currentTarget}</strong><br>
-         AI 인식 결과: <strong>${recognized}</strong></p>
-         <p>${tip}</p>
-         <p class="muted">
-           음성 인식 결과는 주변 소음과 기기 성능의 영향을 받을 수 있습니다.
-         </p>`;
-    }
-
-    document.getElementById("retryButton").addEventListener("click", () => {
-      showScreen("record");
-
-      document.getElementById("recognitionStatus").innerHTML =
-        '<span class="muted">같은 단어를 다시 발음해 보세요.</span>';
-    });
-
-    startQuiz();
-    newTargetWord();
-  </script>
+    </main>
+    <aside class="side">
+      <div class="sidecard"><h3>🏁 Pronunciation Race</h3><div class="track"><div class="finish">🏆 FINISH</div><div id="runner" class="runner">🦊</div></div><p style="display:flex;justify-content:space-between;font-size:12px;font-weight:900;color:#667085"><span>BOOST</span><span id="boostText">0 / 3</span></p><div class="boost"><div id="boost"></div></div></div>
+      <div class="sidecard"><h3>🎯 게임 팁</h3><ul class="tips"><li>3연속 정답 후 다음 정답은 2배 점수</li><li>/l/: 혀끝이 윗잇몸에 닿음</li><li>/r/: 혀끝이 입천장에 닿지 않음</li><li>기술 오류는 오답 처리하지 않음</li></ul></div>
+    </aside>
+  </div>
+</section>
+
+<section id="result" class="panel result hidden">
+  <div class="trophy">🏆</div><h2 id="resultHead">Game Complete!</h2><div id="rank" class="ranktitle">Pronunciation Master</div>
+  <div class="stats"><div class="stat"><small>Final Score</small><b id="finalScore">0</b></div><div class="stat"><small>Accuracy</small><b id="accuracy">0%</b></div><div class="stat"><small>Best Streak</small><b id="best">0</b></div><div class="stat"><small>Coins</small><b id="finalCoins">0</b></div></div>
+  <div class="actions"><button id="copy" class="primary">📋 결과 코드 복사</button><button id="again" class="secondary">↻ 재도전</button><button id="home" class="secondary">⌂ 처음으로</button></div><div id="resultCode" class="code"></div>
+</section>
+
+<section id="teacher" class="panel teacher hidden">
+  <div class="teacherhead"><div><h2>교사용 순위판</h2><p class="sub">학생 결과 코드를 한 줄에 하나씩 붙여 넣으세요.</p></div><button id="teacherClose" class="secondary">닫기</button></div>
+  <textarea id="input" placeholder="RLRESULT:...&#10;RLRESULT:..."></textarea><p><button id="build" class="primary">🏆 순위 만들기</button> <button id="clear" class="secondary">초기화</button></p>
+  <div style="overflow:auto"><table class="board"><thead><tr><th>Rank</th><th>Player</th><th>Room</th><th>Score</th><th>Accuracy</th><th>Streak</th></tr></thead><tbody id="board"><tr><td colspan="6" style="text-align:center;color:#667085">결과 코드를 붙여 넣으세요.</td></tr></tbody></table></div>
+</section>
+</div>
+<script>
+const PAIRS=[
+{r:'rice',l:'lice',ri:'/raɪs/',li:'/laɪs/'},{r:'right',l:'light',ri:'/raɪt/',li:'/laɪt/'},{r:'road',l:'load',ri:'/roʊd/',li:'/loʊd/'},{r:'rock',l:'lock',ri:'/rɑːk/',li:'/lɑːk/'},{r:'rake',l:'lake',ri:'/reɪk/',li:'/leɪk/'},{r:'fry',l:'fly',ri:'/fraɪ/',li:'/flaɪ/'},{r:'crown',l:'clown',ri:'/kraʊn/',li:'/klaʊn/'},{r:'grow',l:'glow',ri:'/ɡroʊ/',li:'/ɡloʊ/'},{r:'pray',l:'play',ri:'/preɪ/',li:'/pleɪ/'},{r:'berry',l:'belly',ri:'/ˈberi/',li:'/ˈbeli/'},{r:'arrive',l:'alive',ri:'/əˈraɪv/',li:'/əˈlaɪv/'},{r:'correct',l:'collect',ri:'/kəˈrekt/',li:'/kəˈlekt/'}];
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition,$=x=>document.getElementById(x);
+let S={name:'',room:'',n:12,rounds:[],i:0,score:0,coins:0,streak:0,best:0,correct:0,answered:0,attempts:0,lane:1,boost:false,t:null,time:20,lock:false,code:''};
+function show(id){['start','game','result','teacher'].forEach(x=>$(x).classList.toggle('hidden',x!==id));scrollTo(0,0)}
+function clean(s){return String(s||'').replace(/[<>&"'`]/g,'').trim()}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){return function(){let t=seed+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(a,r){a=[...a];for(let i=a.length-1;i;i--){let j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rounds(room,n){let r=rng(hash(room.toUpperCase())),ps=shuffle(PAIRS,r),types=[],sp=Math.max(4,Math.round(n*.5)),li=Math.max(3,Math.round(n*.34));for(let i=0;i<sp;i++)types.push('speech');for(let i=0;i<li;i++)types.push('listen');while(types.length<n)types.push('classify');types=shuffle(types,r);return types.map((type,i)=>{let p=ps[i%ps.length],side=r()<.5?'r':'l';return{type,p,target:p[side],side,ipa:p[side+'i'],choices:shuffle([p.r,p.l],r)}})}
+function speak(text,rate=.82){if(!speechSynthesis)return alert('음성 재생을 지원하지 않는 브라우저입니다.');speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=rate;let vs=speechSynthesis.getVoices(),v=vs.find(x=>x.lang==='en-US')||vs.find(x=>x.lang&&x.lang.startsWith('en'));if(v)u.voice=v;speechSynthesis.speak(u)}
+function hud(){$('player').textContent=S.name+' · '+S.room;$('score').textContent=S.score.toLocaleString();$('coins').textContent='🪙 '+S.coins;$('streak').textContent='🔥 '+S.streak;$('progress').style.width=(S.i/S.n*100)+'%';$('runner').style.bottom=Math.min(12+S.i/S.n*155,170)+'px';$('boost').style.width=(Math.min(S.streak,3)/3*100)+'%';$('boostText').textContent=S.boost?'2× READY!':Math.min(S.streak,3)+' / 3'}
+function stopTimer(){clearInterval(S.t);S.t=null}function timer(sec){stopTimer();S.time=sec;$('timer').textContent=sec;S.t=setInterval(()=>{$('timer').textContent=--S.time;if(S.time<=0){stopTimer();if(!S.lock)miss('시간이 끝났어요.')}},1000)}
+function round(){return S.rounds[S.i]}function render(){if(S.i>=S.n)return finish();S.lock=false;S.attempts=0;hud();$('listenArea').classList.add('hidden');$('speakArea').classList.add('hidden');$('choices').innerHTML='';$('feedback').className='feedback';$('feedback').textContent='SPEAK NOW가 나타나면 말하세요.';$('mic').disabled=false;$('mic').classList.remove('listening');$('mic').textContent='🎤 발음 도전';let q=round();if(q.type==='listen')renderListen(q);else if(q.type==='classify')renderClass(q);else renderSpeech(q)}
+function renderListen(q){$('badge').textContent='🎧 LISTEN BLITZ · '+(S.i+1)+'/'+S.n;$('title').textContent='어떤 단어가 들렸나요?';$('help').textContent='이어폰으로 듣고 두 단어 중 하나를 선택하세요.';$('listenArea').classList.remove('hidden');q.choices.forEach(w=>{let b=document.createElement('button');b.className='choice';b.textContent=w;b.onclick=()=>judgeWord(w,b);$('choices').appendChild(b)});timer(18);setTimeout(()=>speak(q.target),350)}
+function renderClass(q){$('badge').textContent='⚡ R OR L SCAN · '+(S.i+1)+'/'+S.n;$('title').textContent='첫소리는 R일까요, L일까요?';$('help').textContent='단어를 듣고 첫소리를 선택하세요.';$('listenArea').classList.remove('hidden');[['R sound','r'],['L sound','l']].forEach(x=>{let b=document.createElement('button');b.className='choice';b.textContent=x[0];b.onclick=()=>judgeSide(x[1],b);$('choices').appendChild(b)});timer(15);setTimeout(()=>speak(q.target),350)}
+function renderSpeech(q){$('badge').textContent='🎤 MIC STRIKE · '+(S.i+1)+'/'+S.n;$('title').textContent='목표 단어를 정확히 발음하세요.';$('help').textContent='기기를 입 가까이 두고 목표 단어만 짧게 말하세요.';$('speakArea').classList.remove('hidden');$('target').textContent=q.target;$('ipa').textContent=q.ipa;$('lane').textContent='🎙️ 나의 마이크 라인 '+S.lane;timer(28)}
+function disableChoices(correct){[...$('choices').children].forEach(b=>{if(b.textContent.toLowerCase().startsWith(correct.toLowerCase()))b.classList.add('correct');b.disabled=true})}
+function judgeWord(v,b){if(S.lock)return;S.lock=true;stopTimer();if(v===round().target){b.classList.add('correct');award(100)}else{b.classList.add('wrong');disableChoices(round().target);wrong('정답은 “'+round().target+'”입니다.')}}
+function judgeSide(v,b){if(S.lock)return;S.lock=true;stopTimer();if(v===round().side){b.classList.add('correct');award(90)}else{b.classList.add('wrong');disableChoices(round().side==='r'?'R':'L');wrong('정답은 '+round().side.toUpperCase()+' sound입니다.')}}
+function message(t,type){if(!$('speakArea').classList.contains('hidden')){$('feedback').className='feedback '+(type||'');$('feedback').innerHTML=t}else{$('help').style.fontWeight='900';$('help').style.color=type==='good'?'#087647':'#a72a31';$('help').innerHTML=t}}
+function award(base){S.correct++;S.answered++;S.streak++;S.best=Math.max(S.best,S.streak);let mult=1;if(S.boost){mult=2;S.boost=false;S.streak=1}else if(S.streak>=3)S.boost=true;let pts=Math.round((base+Math.max(0,S.time*3))*mult),c=Math.max(5,Math.round(pts/10));S.score+=pts;S.coins+=c;hud();message((mult===2?'2× BOOST! ':'')+'+'+pts+'점 · +'+c+'코인','good');setTimeout(next,900)}
+function wrong(t){S.answered++;S.streak=0;S.boost=false;hud();message(t,'bad');setTimeout(next,1200)}function miss(t){if(S.lock)return;S.lock=true;stopTimer();wrong(t)}function next(){stopTimer();S.i++;$('help').style.fontWeight='';$('help').style.color='';render()}
+$('orb').onclick=()=>{if(round())speak(round().target)};$('hear').onclick=()=>{if(round())speak(round().target,.72)};
+function norm(x){return String(x||'').toLowerCase().replace(/[.,!?;:'"]/g,'').replace(/\s+/g,' ').trim()}
+function mic(){let q=round();if(!SR){$('feedback').className='feedback bad';$('feedback').textContent='Chrome 또는 Edge에서 실행하세요.';return}S.attempts++;$('mic').disabled=true;let c=3;$('feedback').className='feedback';$('feedback').textContent='준비… '+c;let cd=setInterval(()=>{if(--c>0)return $('feedback').textContent='준비… '+c;clearInterval(cd);setTimeout(()=>{let rec=new SR();rec.lang='en-US';rec.interimResults=false;rec.continuous=false;rec.maxAlternatives=5;$('mic').classList.add('listening');$('mic').textContent='🔴 LISTENING';$('feedback').textContent='SPEAK NOW!';rec.onresult=e=>{let alt=Array.from(e.results[0]).map(x=>norm(x.transcript)),tar=norm(q.target),opp=norm(q.side==='r'?q.p.l:q.p.r),ok=alt.some(x=>x===tar||x.split(' ').includes(tar)),op=alt.some(x=>x===opp||x.split(' ').includes(opp));$('mic').classList.remove('listening');$('mic').disabled=false;$('mic').textContent='🎤 발음 도전';if(ok){S.lock=true;stopTimer();$('feedback').className='feedback good';$('feedback').innerHTML='AI 인식: <b>'+alt[0]+'</b><br>목표 단어와 일치합니다!';award(S.attempts===1?150:110)}else if(op){$('feedback').className='feedback bad';$('feedback').innerHTML='AI가 <b>'+opp+'</b>로 들었어요.<br>'+(q.side==='r'?'/r/: 혀끝이 입천장에 닿지 않게 해 보세요.':'/l/: 혀끝을 윗잇몸에 닿게 해 보세요.');if(S.attempts>=2){S.lock=true;stopTimer();setTimeout(()=>wrong('두 번 시도했습니다. 다음 문제로 이동합니다.'),800)}else $('mic').textContent='↻ 한 번 더 발음하기'}else{$('feedback').className='feedback bad';$('feedback').innerHTML='AI 인식: <b>'+(alt[0]||'인식 실패')+'</b><br>목표 단어만 짧게 다시 말하세요.';if(S.attempts>=2){S.lock=true;stopTimer();setTimeout(()=>wrong('두 번 시도했습니다. 다음 문제로 이동합니다.'),800)}else $('mic').textContent='↻ 소음 보호 재시도'}};rec.onerror=e=>{$('mic').classList.remove('listening');$('mic').disabled=false;$('mic').textContent='↻ 다시 시도';S.attempts=Math.max(0,S.attempts-1);$('feedback').className='feedback';$('feedback').textContent=(e.error==='not-allowed'?'마이크 권한을 허용하세요.':'음성을 받지 못했어요. 이 시도는 오답 처리하지 않습니다.')};try{rec.start()}catch(e){S.attempts=Math.max(0,S.attempts-1);$('mic').disabled=false}},(S.lane-1)*300)},650)}$('mic').onclick=mic;
+function startGame(){let name=clean($('name').value),room=clean($('room').value).toUpperCase();if(!name)return alert('닉네임을 입력하세요.');if(!room)return alert('방 코드를 입력하세요.');Object.assign(S,{name,room,n:+$('count').value,rounds:rounds(room,+$('count').value),i:0,score:0,coins:0,streak:0,best:0,correct:0,answered:0,attempts:0,lane:hash(name+room)%4+1,boost:false,lock:false});show('game');hud();render()}
+function enc(d){let bytes=new TextEncoder().encode(JSON.stringify(d)),bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return'RLRESULT:'+btoa(bin)}function dec(c){let bin=atob(c.trim().slice(9)),bytes=Uint8Array.from(bin,x=>x.charCodeAt(0));return JSON.parse(new TextDecoder().decode(bytes))}
+function finish(){stopTimer();let acc=S.answered?Math.round(S.correct/S.answered*100):0,d={name:S.name,room:S.room,score:S.score,coins:S.coins,accuracy:acc,best:S.best,rounds:S.n};S.code=enc(d);$('resultHead').textContent=S.name+', 경기 완료!';$('rank').textContent=acc>=90?'👑 R/L Arena Champion':acc>=80?'🏆 Pronunciation Master':acc>=65?'⚡ Sound Hunter':acc>=50?'🎯 Rising Speaker':'🌱 Pronunciation Rookie';$('finalScore').textContent=S.score.toLocaleString();$('accuracy').textContent=acc+'%';$('best').textContent=S.best;$('finalCoins').textContent=S.coins;$('resultCode').textContent=S.code;show('result');confetti()}
+function confetti(){let cs=['#6c5ce7','#2687f5','#ffcc4d','#ff6d5d','#22c7a9'];for(let i=0;i<70;i++){let d=document.createElement('div');d.className='confetti';d.style.left=Math.random()*100+'vw';d.style.background=cs[Math.floor(Math.random()*cs.length)];d.style.setProperty('--x',(Math.random()-.5)*250+'px');d.style.animationDuration=2.5+Math.random()*2+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),5000)}}
+$('go').onclick=startGame;$('random').onclick=()=>{$('room').value='RL'+Math.random().toString(36).slice(2,6).toUpperCase()};$('teacherOpen').onclick=()=>show('teacher');$('teacherClose').onclick=()=>show('start');$('home').onclick=()=>show('start');$('again').onclick=()=>{S.rounds=rounds(S.room,S.n);S.i=S.score=S.coins=S.streak=S.best=S.correct=S.answered=0;S.boost=false;show('game');render()};$('copy').onclick=async()=>{try{await navigator.clipboard.writeText(S.code);$('copy').textContent='✓ 복사 완료';setTimeout(()=>$('copy').textContent='📋 결과 코드 복사',1200)}catch(e){prompt('복사하세요.',S.code)}};$('clear').onclick=()=>{$('input').value='';$('board').innerHTML='<tr><td colspan="6" style="text-align:center;color:#667085">결과 코드를 붙여 넣으세요.</td></tr>'};function esc(s){return String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}$('build').onclick=()=>{let a=[];$('input').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).forEach(x=>{try{if(x.startsWith('RLRESULT:'))a.push(dec(x))}catch(e){}});a.sort((x,y)=>y.score-x.score||y.accuracy-x.accuracy||y.best-x.best);$('board').innerHTML=a.length?a.map((x,i)=>'<tr><td>'+(i<3?['🥇','🥈','🥉'][i]+' ':'')+(i+1)+'</td><td>'+esc(x.name)+'</td><td>'+esc(x.room)+'</td><td>'+Number(x.score).toLocaleString()+'</td><td>'+x.accuracy+'%</td><td>'+x.best+'</td></tr>').join(''):'<tr><td colspan="6" style="text-align:center;color:#a72a31">인식 가능한 결과 코드가 없습니다.</td></tr>'};$('name').onkeydown=e=>{if(e.key==='Enter')startGame()};
+</script>
 </body>
 </html>
